@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api', apiRouter);
 
 app.use((err: Error | CustomError, _: Request, res: Response, next: NextFunction) => {
-    const status = err instanceof CustomError ? err.HttpStatus : StatusCodes.BAD_REQUEST;
+    const status = err instanceof CustomError ? err.HttpStatus : StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(status).json({
         error: err.message,
     });
