@@ -24,15 +24,15 @@ axiosInstance.defaults.headers.common = {
 
 const find = async (req: Request, res: Response, next: NextFunction) => {
     const { keyword, filter, skip, limit } = req.query;
-    if (!keyword) return res.status(BAD_REQUEST).json({ message: '"keyword" is required.' });
+    if (!keyword) return res.status(OK).json({ data: [], totalCount: 0 });
 
     try {
         const response = await axiosInstance.get('/volumes', {
             params: {
                 q: keyword,
                 filter,
-                startIndex: skip,
-                maxResults: limit,
+                startIndex: Number(skip),
+                maxResults: Number(limit),
                 // eslint-disable-next-line max-len
                 fields: 'totalItems,items(id,selfLink,volumeInfo(title,authors,publisher,publishedDate,description,pageCount,mainCategory,categories,averageRating,imageLinks/smallThumbnail))',
             },
@@ -56,7 +56,7 @@ const find = async (req: Request, res: Response, next: NextFunction) => {
         });
 
         return res.status(OK).json({ data, totalCount: totalItems });
-    } catch (error: unknown) {
+    } catch (error: any) {
         next(error);
     }
 };
